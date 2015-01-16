@@ -67,7 +67,8 @@ class Fluent::HerokuPostgresOutput < Fluent::BufferedOutput
     handler = self.client
     handler.prepare("write", @sql)
     chunk.msgpack_each { |tag, time, data|
-      handler.exec_prepared("write", data)
+      log.info("tag: #{tag}, time: #{time}, data: #{data}")
+      handler.exec_prepared("write", [time, tag, data])
     }
     handler.close
   end
